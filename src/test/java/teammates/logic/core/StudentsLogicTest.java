@@ -145,8 +145,154 @@ public class StudentsLogicTest extends BaseLogicTest {
                 + StudentsLogic.ERROR_INVALID_TEAM_NAME_INSTRUCTION;
 
         assertEquals(expectedInvalidTeamError, ee.getMessage());
-    }
 
+        ______TS("Case CT1");
+
+        List<StudentAttributes> mergedList = new ArrayList<>();
+        mergedList.add(new StudentAttributes("Section 1", "Student 1"));
+        mergedList.add(new StudentAttributes("Section 1", "Student 2"));
+        mergedList.add(new StudentAttributes("Section 1", "Student 3"));
+
+        int studentsCount = 1;
+
+        for (int i = 1; i < mergedList.size(); i++) {
+                StudentAttributes currentStudent = mergedList.get(i);
+                StudentAttributes previousStudent = mergedList.get(i - 1);
+                if (currentStudent.getSection().equals(previousStudent.getSection())) {
+                        studentsCount++;
+                } 
+        }
+
+        assertEquals(3, studentsCount);
+
+
+        ______TS("Case CT2");
+        mergedList.clear();
+        mergedList.add(new StudentAttributes("Section 1", "Student 1"));
+        mergedList.add(new StudentAttributes("Section 2", "Student 2"));
+        mergedList.add(new StudentAttributes("Section 3", "Student 3"));
+        
+        studentsCount = 1;
+        
+        for (int i = 1; i < mergedList.size(); i++) {
+            StudentAttributes currentStudent = mergedList.get(i);
+            StudentAttributes previousStudent = mergedList.get(i - 1);
+            if (currentStudent.getSection().equals(previousStudent.getSection())) {
+                studentsCount++;
+            } 
+        }
+        
+        assertEquals(1, studentsCount);
+        
+        ______TS("Case CT3");
+        final int SECTION_SIZE_LIMIT = 2;
+        mergedList.clear();
+        mergedList.add(new StudentAttributes("Section 1", "Student 1"));
+        mergedList.add(new StudentAttributes("Section 1", "Student 2"));
+        mergedList.add(new StudentAttributes("Section 1", "Student 3"));
+        
+        List<String> invalidSectionList = new ArrayList<>();
+        studentsCount = 1;
+        
+        for (int i = 1; i < mergedList.size(); i++) {
+            StudentAttributes currentStudent = mergedList.get(i);
+            StudentAttributes previousStudent = mergedList.get(i - 1);
+            if (currentStudent.getSection().equals(previousStudent.getSection())) {
+                studentsCount++;
+            } else {
+                if (studentsCount > SECTION_SIZE_LIMIT) {
+                    invalidSectionList.add(previousStudent.getSection());
+                }
+                studentsCount = 1;
+            }
+        }
+        
+        assertEquals(1, invalidSectionList.size());
+        assertEquals("Section 1", invalidSectionList.get(0));
+
+        ______TS("Case CT4");
+        final int SECTION_SIZE_LIMIT_TEST = 4;
+        mergedList.clear();
+        mergedList.add(new StudentAttributes("Section 1", "Student 1"));
+        mergedList.add(new StudentAttributes("Section 1", "Student 2"));
+        mergedList.add(new StudentAttributes("Section 1", "Student 3"));
+        mergedList.add(new StudentAttributes("Section 1", "Student 4"));
+
+        invalidSectionList.clear();
+        studentsCount = 1;
+
+        for (int i = 1; i < mergedList.size(); i++) {
+        StudentAttributes currentStudent = mergedList.get(i);
+        StudentAttributes previousStudent = mergedList.get(i - 1);
+        if (currentStudent.getSection().equals(previousStudent.getSection())) {
+                studentsCount++;
+        } else {
+                if (studentsCount > SECTION_SIZE_LIMIT_TEST) {
+                invalidSectionList.add(previousStudent.getSection());
+                }
+                studentsCount = 1;
+        }
+        }
+
+        assertEquals(0, invalidSectionList.size());
+
+        ______TS("Case CT5");
+        mergedList.clear();
+        mergedList.add(new StudentAttributes("Section 1", "Student 1"));
+        mergedList.add(new StudentAttributes("Section 1", "Student 2"));
+        mergedList.add(new StudentAttributes("Section 1", "Student 3"));
+        mergedList.add(new StudentAttributes("Section 1", "Student 4"));
+        
+        invalidSectionList.clear();
+        studentsCount = 1;
+        
+        for (int i = 1; i < mergedList.size(); i++) {
+            StudentAttributes currentStudent = mergedList.get(i);
+            StudentAttributes previousStudent = mergedList.get(i - 1);
+            if (currentStudent.getSection().equals(previousStudent.getSection())) {
+                studentsCount++;
+            } else {
+                if (studentsCount > SECTION_SIZE_LIMIT_TEST) {
+                    invalidSectionList.add(previousStudent.getSection());
+                }
+                studentsCount = 1;
+            }
+            if (i == mergedList.size() - 1 && studentsCount > SECTION_SIZE_LIMIT_TEST) {
+                invalidSectionList.add(currentStudent.getSection());
+            }
+        }
+        
+        assertEquals(0, invalidSectionList.size());
+        
+        ______TS("Case CT6");
+        mergedList.clear();
+        mergedList.add(new StudentAttributes("Section 1", "Student 1"));
+        mergedList.add(new StudentAttributes("Section 1", "Student 2"));
+        mergedList.add(new StudentAttributes("Section 1", "Student 3"));
+        
+        invalidSectionList.clear();
+        studentsCount = 1;
+        
+        for (int i = 1; i < mergedList.size(); i++) {
+            StudentAttributes currentStudent = mergedList.get(i);
+            StudentAttributes previousStudent = mergedList.get(i - 1);
+            if (currentStudent.getSection().equals(previousStudent.getSection())) {
+                studentsCount++;
+            } else {
+                if (studentsCount > SECTION_SIZE_LIMIT) {
+                    invalidSectionList.add(previousStudent.getSection());
+                }
+                studentsCount = 1;
+            }
+            if (i == mergedList.size() - 1 && studentsCount > SECTION_SIZE_LIMIT) {
+                invalidSectionList.add(currentStudent.getSection());
+            }
+        }
+        
+        assertEquals(1, invalidSectionList.size());
+        assertEquals("Section 1", invalidSectionList.get(0));
+    }
+  
     @Test
     public void testUpdateStudentCascade() throws Exception {
 
